@@ -19,13 +19,12 @@ export class GraphComponent implements AfterViewInit {
     this.context = this.myCanvas?.nativeElement.getContext('2d');
 
     this.data = this.createData();
-
-    await this.animate();
+    this.createGraph(this.data);
   }
 
   createData(): number[] {
     const result = [];
-    for (let i = 0; i < 80; i++) {
+    for (let i = 0; i < 50; i++) {
       result.push(this.generateAnNumber(30, 100));
     }
     return result;
@@ -51,13 +50,21 @@ export class GraphComponent implements AfterViewInit {
       horizontalPosition += width + gap;
     }
   }
+  async startBubbleSort() {
+    console.log('start');
+    await this.animate();
+  }
 
   cleanData(data: number[]) {
     const max = Math.max(...data);
     const min = Math.min(...data);
 
+    const minValue = 0.02 * max;
+
     const newData = data.map((item: number) => {
-      return ((item - min) / (max - min)) * 480;
+      return ((item - min) / (max - min)) * 480 < minValue
+        ? minValue
+        : ((item - min) / (max - min)) * 480;
     });
 
     return newData;

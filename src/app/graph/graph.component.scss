@@ -1,3 +1,12 @@
-canvas {
-  background-color: gray;
+.main-canvas-container {
+  width: 100vh;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 50px;
+
+  canvas {
+    background-color: gray;
+    margin-bottom: 20px;
+  }
 }
