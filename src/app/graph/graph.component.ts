@@ -24,13 +24,13 @@ export class GraphComponent implements AfterViewInit {
 
   createData(): number[] {
     const result = [];
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 30; i++) {
       result.push(this.generateAnNumber(30, 100));
     }
     return result;
   }
 
-  createGraph(initialData?: number[]) {
+  createGraph(initialData?: number[], color = 'white') {
     this.context?.clearRect(0, 0, 1000, 1000);
     const width = 10;
     const gap = 2;
@@ -39,7 +39,7 @@ export class GraphComponent implements AfterViewInit {
 
     const cleanData = this.cleanData(initialData!);
 
-    this.context!.fillStyle = 'white';
+    this.context!.fillStyle = color;
     for (let i = 0; i < cleanData.length; i++) {
       this.context?.fillRect(
         horizontalPosition,
@@ -75,6 +75,7 @@ export class GraphComponent implements AfterViewInit {
     if (!this.shouldStop) {
       window.requestAnimationFrame(() => this.animate());
     } else {
+      this.createGraph(this.data, '#99ff99');
       console.log('stop');
     }
   }
@@ -89,7 +90,7 @@ export class GraphComponent implements AfterViewInit {
           this.data![i + 1] = temp;
           this.shouldStop = false;
         }
-        await this.sleep(100);
+        await this.sleep(5);
         this.createGraph(this.data);
       }
     }
