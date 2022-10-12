@@ -11,7 +11,9 @@ export class GraphComponent implements AfterViewInit {
 
   data: number[] | undefined;
   isSorted = false;
+  isRunning = false;
   shouldStop = false;
+  lastSortedTerm: number | undefined;
 
   public context: CanvasRenderingContext2D | null | undefined;
 
@@ -24,13 +26,13 @@ export class GraphComponent implements AfterViewInit {
 
   createData(): number[] {
     const result = [];
-    for (let i = 0; i < 30; i++) {
-      result.push(this.generateAnNumber(30, 100));
+    for (let i = 0; i < 80; i++) {
+      result.push(this.generateAnNumber(30, 500));
     }
     return result;
   }
 
-  createGraph(initialData?: number[], color = 'white') {
+  createGraph(initialData?: number[], color = 'white', movedTerm?: number) {
     this.context?.clearRect(0, 0, 1000, 1000);
     const width = 10;
     const gap = 2;
@@ -39,8 +41,14 @@ export class GraphComponent implements AfterViewInit {
 
     const cleanData = this.cleanData(initialData!);
 
-    this.context!.fillStyle = color;
+    
     for (let i = 0; i < cleanData.length; i++) {
+
+      if (i - 1 === movedTerm) {
+        this.context!.fillStyle = 'green';
+      } else {
+        this.context!.fillStyle = color;
+      }
       this.context?.fillRect(
         horizontalPosition,
         verticalPosition,
@@ -52,6 +60,7 @@ export class GraphComponent implements AfterViewInit {
   }
   async startBubbleSort() {
     console.log('start');
+    this.lastSortedTerm = this.data!.length - 1;
     await this.animate();
   }
 
@@ -70,12 +79,19 @@ export class GraphComponent implements AfterViewInit {
     return newData;
   }
 
+  refresh() {
+    location.reload();
+  }
+
   async animate() {
+    this.isRunning = true;
     await this.sortBubbleAlgorithm();
     if (!this.shouldStop) {
       window.requestAnimationFrame(() => this.animate());
+      this.lastSortedTerm = this.lastSortedTerm! - 1;
     } else {
       this.createGraph(this.data, '#99ff99');
+      this.isRunning = false;
       console.log('stop');
     }
   }
@@ -83,15 +99,15 @@ export class GraphComponent implements AfterViewInit {
   async sortBubbleAlgorithm() {
     if (!this.isSorted) {
       this.shouldStop = true;
-      for (let i = 0; i < this.data!.length; i++) {
+      for (let i = 0; i < this.lastSortedTerm!; i++) {
         if (this.data![i] > this.data![i + 1]) {
           const temp = this.data![i];
           this.data![i] = this.data![i + 1];
           this.data![i + 1] = temp;
           this.shouldStop = false;
         }
-        await this.sleep(5);
-        this.createGraph(this.data);
+        await this.sleep(100);
+        this.createGraph(this.data, 'white', i);
       }
     }
   }

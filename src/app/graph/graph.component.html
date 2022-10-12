@@ -1,6 +1,9 @@
 <div class="main-canvas-container">
   <canvas #mainGraph height="500" width="1000"></canvas>
   <div class="container-canvas-btns">
-    <button (click)="startBubbleSort()">Bubble sort algorithm</button>
+    <button (click)="startBubbleSort()" [disabled]="isRunning">
+      Bubble sort algorithm
+    </button>
+    <button (click)="refresh()">Refresh</button>
   </div>
 </div>
