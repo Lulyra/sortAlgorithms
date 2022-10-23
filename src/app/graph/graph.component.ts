@@ -106,7 +106,7 @@ export class GraphComponent implements AfterViewInit {
           this.data![i + 1] = temp;
           this.shouldStop = false;
         }
-        await this.sleep(100);
+        await this.sleep(20);
         this.createGraph(this.data, 'white', i);
       }
     }
